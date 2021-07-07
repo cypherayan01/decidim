@@ -1,0 +1,13 @@
+---
+  - name: Gem install bootsnap
+    shell: gem install bootsnap  
+
+  - name: Gem install listen
+    shell: gem install listen  
+
+  - name: Gem install decidim
+    shell: gem install decidim  
+    
+  - name: Decidim create application
+    shell: decidim decidim_application
+  

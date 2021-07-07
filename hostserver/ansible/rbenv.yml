@@ -1,0 +1,59 @@
+---
+  - name: Apt-Update
+    become: true
+    apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+  - name: Required libraries for rbenv
+    become: true
+    apt: name={{item}} state=latest
+    with_items:
+      - build-essential
+      - autoconf
+      - bison
+      - nodejs
+      - libssl-dev
+      - libyaml-dev
+      - libreadline-dev 
+      - zlib1g-dev
+      - libncurses5-dev
+      - libffi-dev
+      - libgdbm-dev
+      - libicu-dev
+      - ruby-build
+      - ruby-dev
+
+  - name: Cloning Rbenv Repo
+    git:
+      repo: https://github.com/rbenv/rbenv.git
+      dest: /home/vagrant/.rbenv
+      update: no
+
+  - name: Exporting and setting path
+    shell: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+
+  - name: Path set
+    shell: echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+
+  - name: Source 
+    shell: . ~/.bashrc
+
+  - name: Cloning Ruby Repo
+    git:
+      repo: https://github.com/rbenv/ruby-build.git
+      dest: /home/vagrant/.rbenv/plugins/ruby-build
+      update: no
+
+  - name: Rbenv install 2.7.3
+    shell: sudo rbenv install 2.7.3
+
+  - name: Rbenv global 2.7.3  
+    shell: sudo rbenv global 2.7.3
+
+  - name: Gemrc
+    script: gem.sh
+    
+
+  - name: Gem Install bundler
+    shell: sudo gem install bundler
+    
+       

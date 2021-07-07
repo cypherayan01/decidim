@@ -1,0 +1,9 @@
+---
+  - name: Installing Decidim
+    hosts: all
+    become: false
+    tasks:
+    - include_tasks: rbenv.yml
+    - include_tasks: PostgreSQL.yml
+    - include_tasks: gem.yml
+    

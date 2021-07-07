@@ -1,0 +1,32 @@
+---
+  - name: PostgreSQL Apt
+    become: 1
+    shell: apt install -y postgresql libpq-dev
+
+  - name: Create PostgreUser
+    shell: sudo -u postgres psql -c "CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREATEROLE PASSWORD 'password'"
+ 
+  - name: Configuring Database
+    shell: echo gem \"figaro\" >> /home/vagrant/decidim_application/Gemfile
+    args:
+      chdir: /home/vagrant/decidim_application
+
+  - name: Bundle Install
+    shell: bundle install
+    args:
+      chdir: /home/vagrant/decidim_application
+
+  - name: Bundle exec
+    shell: bundle exec figaro install
+    args:
+      chdir: /home/vagrant/decidim_application
+      
+  - name: Modifying application.yml
+    copy:
+      src: application.yml
+      dest: /home/vagrant/decidim_application/config/application.yml
+  
+  - name: Setup Database
+    shell: bin/rails db:create db:migrate db:seed
+    args:
+      chdir: /home/vagrant/decidim_application
